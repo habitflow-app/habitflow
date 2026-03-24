@@ -1,13 +1,237 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>habitflow</title>
+    <meta name="theme-color" content="#0F0F14" />
+    <meta name="description" content="HabitFlow - Your habit & daily task tracker" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <title>HabitFlow</title>
   </head>
   <body>
-    <div id="app"></div>
+
+    <div id="app">
+
+      <header class="app-header">
+        <div class="header-left">
+          <div class="avatar" id="avatarBtn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+          <span class="app-name">habit flow</span>
+        </div>
+        <span class="welcome-text" id="welcomeText">Welcome, User</span>
+      </header>
+
+      <main class="screen-container">
+
+        <!-- HOME -->
+        <section class="screen active" id="screen-home">
+          <div class="screen-scroll">
+            <div class="today-banner">
+              <div class="today-info">
+                <span class="today-label">Today</span>
+                <span class="today-date" id="todayDate"></span>
+              </div>
+              <div class="today-stats">
+                <span class="stat-pill" id="doneCount">0 done</span>
+                <span class="stat-pill accent" id="streakCount">🔥 0 streak</span>
+              </div>
+            </div>
+
+            <div class="section-header">
+              <h2 class="section-title">Habits</h2>
+              <span class="section-count" id="habitsCount">0</span>
+            </div>
+            <div class="items-list" id="habitsList">
+              <div class="empty-state" id="habitsEmpty">No habits yet. Hit + to add one!</div>
+            </div>
+
+            <div class="section-header" style="margin-top:28px;">
+              <h2 class="section-title">Tasks</h2>
+              <span class="section-count" id="tasksCount">0</span>
+            </div>
+            <div class="items-list" id="tasksList">
+              <div class="empty-state" id="tasksEmpty">No tasks yet. Hit + to add one!</div>
+            </div>
+
+            <div style="height:100px;"></div>
+          </div>
+        </section>
+
+        <!-- CHARTS -->
+        <section class="screen" id="screen-charts">
+          <div class="screen-scroll">
+            <div class="page-title">
+              <h1>Progress</h1>
+              <p>Your streaks & stats</p>
+            </div>
+            <div class="charts-grid">
+              <div class="stat-card">
+                <span class="stat-card-label">Best Streak</span>
+                <span class="stat-card-value" id="bestStreak">0</span>
+                <span class="stat-card-unit">days</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-card-label">Total Habits</span>
+                <span class="stat-card-value" id="totalHabits">0</span>
+                <span class="stat-card-unit">habits</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-card-label">Tasks Done</span>
+                <span class="stat-card-value" id="totalTasksDone">0</span>
+                <span class="stat-card-unit">completed</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-card-label">Today's Score</span>
+                <span class="stat-card-value" id="todayScore">0%</span>
+                <span class="stat-card-unit">completion</span>
+              </div>
+            </div>
+            <div class="week-grid-wrapper">
+              <h3 class="section-title" style="margin-bottom:16px;">This Week</h3>
+              <div class="week-grid" id="weekGrid"></div>
+            </div>
+            <div style="height:100px;"></div>
+          </div>
+        </section>
+
+        <!-- COLLAB -->
+        <section class="screen" id="screen-collab">
+          <div class="screen-scroll center-content">
+            <div class="placeholder-screen">
+              <div class="placeholder-icon">🤝</div>
+              <h2>Collab</h2>
+              <p>Share habits & compete with friends.<br/>Coming in <strong>V2</strong>.</p>
+              <div class="coming-soon-badge">Coming Soon</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AI -->
+        <section class="screen" id="screen-ai">
+          <div class="screen-scroll">
+            <div class="page-title">
+              <h1>AI Coach</h1>
+              <p>Powered by Claude</p>
+            </div>
+            <div class="ai-chat-wrapper">
+              <div class="ai-messages" id="aiMessages">
+                <div class="ai-bubble ai">
+                  Hey! I'm your habit coach. Tell me about your goals and I'll help you build better habits 🎯
+                </div>
+              </div>
+              <div class="ai-input-row">
+                <input type="text" class="ai-input" id="aiInput" placeholder="Ask me anything..." />
+                <button class="ai-send" id="aiSend">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"/>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- FAB -->
+      <button class="fab" id="fabBtn">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+
+      <!-- BOTTOM NAV -->
+      <nav class="bottom-nav">
+        <button class="nav-btn active" data-screen="home">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>Home</span>
+        </button>
+        <button class="nav-btn" data-screen="charts">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          <span>Charts</span>
+        </button>
+        <button class="nav-btn" data-screen="collab">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+            <path d="M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+          <span>Collab</span>
+        </button>
+        <button class="nav-btn" data-screen="ai">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          </svg>
+          <span>AI</span>
+        </button>
+      </nav>
+
+    </div>
+
+    <!-- ADD MODAL -->
+    <div class="modal-overlay" id="addModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Add New</h3>
+          <button class="modal-close" id="modalClose">✕</button>
+        </div>
+        <div class="modal-tabs">
+          <button class="modal-tab active" data-type="habit">Habit</button>
+          <button class="modal-tab" data-type="task">Task</button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="modal-input" id="itemTitle" placeholder="Name..." />
+          <div id="habitExtras">
+            <select class="modal-input" id="habitColor">
+              <option value="#7C3AED">🟣 Violet</option>
+              <option value="#06B6D4">🔵 Cyan</option>
+              <option value="#22C55E">🟢 Green</option>
+              <option value="#F59E0B">🟡 Amber</option>
+              <option value="#EF4444">🔴 Red</option>
+            </select>
+          </div>
+          <div id="taskExtras" style="display:none; flex-direction:column; gap:12px;">
+            <input type="date" class="modal-input" id="taskDue" />
+            <select class="modal-input" id="taskPriority">
+              <option value="medium">Medium Priority</option>
+              <option value="high">High Priority</option>
+              <option value="low">Low Priority</option>
+            </select>
+          </div>
+        </div>
+        <button class="modal-submit" id="modalSubmit">Add</button>
+      </div>
+    </div>
+
+    <!-- NAME MODAL -->
+    <div class="modal-overlay" id="nameModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>What's your name?</h3>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="modal-input" id="nameInput" placeholder="Your name..." />
+        </div>
+        <button class="modal-submit" id="nameSave">Let's Go 🚀</button>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
