@@ -2,7 +2,6 @@ import './style.css';
 import { renderHabits, addHabit } from './habits.js';
 import { renderTasks, addTask } from './tasks.js';
 import { updateStats, renderWeekGrid } from './streaks.js';
-import { initAI } from './ai.js';
 
 let currentAddType = 'habit';
 
@@ -11,11 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initFAB();
   initModal();
+  initColorPicker();
+  initPriorityPicker();
   renderHabits();
   renderTasks();
   updateHomeStats();
   setTodayDate();
-  initAI();
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
@@ -52,7 +52,7 @@ function openNameModal() {
 }
 
 function setWelcome(name) {
-  document.getElementById('welcomeText').textContent = `Welcome, ${name}`;
+  document.getElementById('welcomeText').textContent = `Hey, ${name} 👋`;
 }
 
 // ── DATE ──────────────────────────────────────────────
@@ -93,19 +93,54 @@ function initModal() {
     if (e.target === document.getElementById('addModal')) closeAddModal();
   });
 
+  document.getElementById('nameModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('nameModal')) closeAddModal();
+  });
+
   document.querySelectorAll('.modal-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       currentAddType = tab.dataset.type;
-      document.getElementById('habitExtras').style.display = currentAddType === 'habit' ? 'block' : 'none';
-      document.getElementById('taskExtras').style.display = currentAddType === 'task' ? 'flex' : 'none';
+
+      const habitExtras = document.getElementById('habitExtras');
+      const taskExtras  = document.getElementById('taskExtras');
+
+      if (currentAddType === 'habit') {
+        habitExtras.style.display = 'block';
+        taskExtras.style.display  = 'none';
+      } else {
+        habitExtras.style.display = 'none';
+        taskExtras.style.display  = 'block';
+      }
     });
   });
 
   document.getElementById('modalSubmit').addEventListener('click', handleSubmit);
   document.getElementById('itemTitle').addEventListener('keydown', e => {
     if (e.key === 'Enter') handleSubmit();
+  });
+}
+
+// ── COLOR PICKER ──────────────────────────────────────
+function initColorPicker() {
+  document.querySelectorAll('.color-swatch').forEach(swatch => {
+    swatch.addEventListener('click', () => {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      swatch.classList.add('active');
+      document.getElementById('habitColor').value = swatch.dataset.color;
+    });
+  });
+}
+
+// ── PRIORITY PICKER ───────────────────────────────────
+function initPriorityPicker() {
+  document.querySelectorAll('.priority-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('taskPriority').value = btn.dataset.priority;
+    });
   });
 }
 
